@@ -7,7 +7,7 @@ import { getPerformance } from 'firebase/performance';
 import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAoyAoWpYXxa5MIrxdGRj6GgZUZfSVXjlY",
+  apiKey: "AfSVXjlY",
   authDomain: "inventory-management-821df.firebaseapp.com",
   projectId: "inventory-management-821df",
   storageBucket: "inventory-management-821df.appspot.com",
