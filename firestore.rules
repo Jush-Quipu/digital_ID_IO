@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function hasRole(role) {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role >= role;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+      
+      // User documents
+      match /documents/{documentId} {
+        allow read: if isOwner(userId);
+        allow write: if isOwner(userId);
+      }
+      
+      // User blocks
+      match /blocks/{blockId} {
+        allow read: if isOwner(userId);
+        allow write: if isOwner(userId);
+      }
+    }
+    
+    // Shared documents
+    match /shares/{shareId} {
+      allow create: if isAuthenticated();
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || 
+        resource.data.recipientEmail == request.auth.token.email
+      );
+    }
+    
+    // Identity claims
+    match /issuedIdentities/{identityId} {
+      allow read: if isAuthenticated() && (
+        resource.data.issuerEmail == request.auth.token.email ||
+        resource.data.recipientEmail == request.auth.token.email
+      );
+      allow create: if hasRole(2); // Only issuers can create
+      allow update: if isAuthenticated() && 
+        resource.data.recipientEmail == request.auth.token.email;
+    }
+    
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && 
+        resource.data.userId == request.auth.uid;
+      allow write: if hasRole(2) || // Issuers can create notifications
+        (isAuthenticated() && resource.data.userId == request.auth.uid); // Users can mark as read
+    }
+  }
+}

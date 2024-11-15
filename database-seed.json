@@ -1,0 +1,16 @@
+{
+  "system": {
+    "maintenance": {
+      "isUnderMaintenance": false,
+      "message": ""
+    },
+    "stats": {
+      "activeUsers": 0,
+      "totalDocuments": 0,
+      "totalShares": 0
+    }
+  },
+  "status": {},
+  "presence": {},
+  "notifications": {}
+}

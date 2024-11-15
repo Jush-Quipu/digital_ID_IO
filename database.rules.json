@@ -1,0 +1,55 @@
+{
+  "rules": {
+    "system": {
+      ".read": "auth != null",
+      ".write": false,
+      "maintenance": {
+        ".read": true
+      },
+      "stats": {
+        ".read": true,
+        "activeUsers": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "status": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "$uid === auth.uid",
+        "lastOnline": {
+          ".read": "auth != null",
+          ".write": "$uid === auth.uid"
+        },
+        "isOnline": {
+          ".read": "auth != null",
+          ".write": "$uid === auth.uid"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        "$notification_id": {
+          ".validate": "newData.hasChildren(['type', 'message', 'createdAt'])",
+          "type": {
+            ".validate": "newData.isString() && newData.val().matches(/^(verification|share|access)$/)"
+          },
+          "message": {
+            ".validate": "newData.isString() && newData.val().length <= 500"
+          },
+          "createdAt": {
+            ".validate": "newData.isString() && newData.val().matches(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/)"
+          }
+        }
+      }
+    }
+  }
+}
