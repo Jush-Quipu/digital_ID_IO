@@ -1,5 +1,6 @@
 {
   "rules": {
+<<<<<<< HEAD
     "system": {
       ".read": "auth != null",
       ".write": false,
@@ -36,6 +37,58 @@
     "notifications": {
       "$uid": {
         ".read": "$uid === auth.uid",
+=======
+<<<<<<< HEAD
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "uploads": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$documentId": {
+          ".validate": "newData.hasChildren(['name', 'type', 'url', 'timestamp'])",
+          "name": { ".validate": "newData.isString()" },
+          "type": { ".validate": "newData.isString()" },
+          "url": { ".validate": "newData.isString()" },
+          "timestamp": { ".validate": "newData.val() <= now" }
+=======
+    "system": {
+      ".read": "auth != null",
+      ".write": false,
+      "maintenance": {
+        ".read": true
+      },
+      "stats": {
+        ".read": true,
+        "activeUsers": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "status": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "$uid === auth.uid",
+        "lastOnline": {
+          ".read": "auth != null",
+          ".write": "$uid === auth.uid"
+        },
+        "isOnline": {
+          ".read": "auth != null",
+          ".write": "$uid === auth.uid"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+>>>>>>> 2ceea37 (update)
         ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
         "$notification_id": {
           ".validate": "newData.hasChildren(['type', 'message', 'createdAt'])",
@@ -48,6 +101,10 @@
           "createdAt": {
             ".validate": "newData.isString() && newData.val().matches(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/)"
           }
+<<<<<<< HEAD
+=======
+>>>>>>> a0bcb98 (Initial commit)
+>>>>>>> 2ceea37 (update)
         }
       }
     }
